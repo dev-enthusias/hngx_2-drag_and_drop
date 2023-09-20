@@ -1,7 +1,17 @@
-import React from 'react'
+import { auth } from '../firebase.config';
+import { redirect, useLoaderData } from 'react-router-dom';
+
+export async function loader() {
+  const user = auth.currentUser;
+
+  if (!user) throw redirect('/signin');
+
+  return user;
+}
 
 export default function HomePage() {
-  return (
-    <div>HomePage</div>
-  )
+  const user = useLoaderData();
+  console.log(user);
+
+  return <div>HomePage</div>;
 }
