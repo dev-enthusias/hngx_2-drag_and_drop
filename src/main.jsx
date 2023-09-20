@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, Route, RouterProvider } from 'react-router-dom';
 
 import HomePage, { loader as homeLoader } from './pages/HomePage';
-import SiginPage from './pages/SiginPage';
+import SiginPage, { action as signInAction } from './pages/SiginPage';
 
 import './index.css';
 
@@ -17,6 +17,7 @@ const router = createBrowserRouter([
   {
     path: '/signin',
     element: <SiginPage />,
+    action: signInAction,
   },
 ]);
 
