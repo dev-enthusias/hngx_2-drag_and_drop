@@ -17,7 +17,7 @@ import piac from '../assets/piacquadio.jpg';
 export async function loader() {
   const user = auth.currentUser;
 
-  //   if (!user) throw redirect('/signin');
+  if (!user) throw redirect('/signin');
 
   return user;
 }
@@ -34,13 +34,9 @@ export default function HomePage() {
   ]);
 
   // Simulate loading effect
-  useEffect(() => {
-    window.onload = () => {
-      setInterval(() => {
-        setIsLoading(false);
-      }, 2000);
-    };
-  }, [photos]);
+  setInterval(() => {
+    setIsLoading(false);
+  }, 2000);
 
   const onSortEnd = (oldIndex, newIndex) => {
     setPhotos(array => arrayMoveImmutable(array, oldIndex, newIndex));
@@ -93,11 +89,6 @@ export default function HomePage() {
                 <Skeleton className='w-full h-full' />
               </div>
             </div>
-            <div>
-              <div className='h-44'>
-                <Skeleton className='w-full h-full' />
-              </div>
-            </div>
           </div>
         </SkeletonTheme>
       ) : (
@@ -110,7 +101,7 @@ export default function HomePage() {
             .filter(photo => {
               return searchInput.toLowerCase() === ''
                 ? photo
-                : photo.name.toLowerCase().includes(searchInput);
+                : photo.name.toLowerCase().includes(searchInput.toLowerCase());
             })
             .map((item, i) => (
               <SortableItem key={i}>
