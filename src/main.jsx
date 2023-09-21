@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { createBrowserRouter, Route, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import HomePage, { loader as homeLoader } from './pages/HomePage';
 import SiginPage, { action as signInAction } from './pages/SiginPage';

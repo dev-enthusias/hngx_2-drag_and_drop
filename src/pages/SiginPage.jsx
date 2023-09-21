@@ -5,27 +5,29 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase.config';
 
 export async function action({ request }) {
-  const formData = await request.formData();
-  const { email, password } = Object.fromEntries(formData);
+  try {
+    const formData = await request.formData();
+    const { email, password } = Object.fromEntries(formData);
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      const user = userCredential.user;
-    })
-    .catch(error => {
-      if (error.message === 'Firebase: Error (auth/invalid-email).')
-        error.message = 'Invalid email';
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
 
-      if (error.message === 'Firebase: Error (auth/missing-password)')
-        error.message = 'Please input your password';
-
-      if (error.message === 'Firebase: Error (auth/invalid-login-credentials).')
-        error.message = 'Wrong login credentials';
-
-      return error.message;
-    });
-
-  return redirect('/');
+    if (user) return redirect('/');
+  } catch (error) {
+    let errorMessage = 'An error occurred during sign-in.';
+    if (error.code === 'auth/invalid-email') {
+      errorMessage = 'Invalid email address.';
+    } else if (error.code === 'auth/missing-password') {
+      errorMessage = 'Please enter your password.';
+    } else if (error.code === 'auth/wrong-password') {
+      errorMessage = 'Wrong login credentials.';
+    }
+    return errorMessage;
+  }
 }
 
 export default function SiginPage() {
@@ -33,8 +35,10 @@ export default function SiginPage() {
 
   return (
     <div className='h-screen flex items-center justify-center px-5'>
-      <Form method='post' replace className='sm:border w-full max-w-lg'>
-        <h1 className='text-center text-2xl font-bold mb-5'>Sign In</h1>
+      <Form method='post' replace className='w-full max-w-lg'>
+        <h1 className='text-center text-2xl text-pink-800 font-bold mb-5'>
+          Sign In
+        </h1>
 
         {message && (
           <h4 className='text-center text-red-500 font-semibold'>{message}</h4>
